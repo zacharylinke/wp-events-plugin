@@ -15,6 +15,15 @@ define( 'IMAGES', ROOT . '/img/' );
 define( 'STYLES', ROOT . '/css/' );
 define( 'SCRIPTS', ROOT . '/js/' );
 
+/*************************************
+** Register and enque events scripts
+*************************************/
+function upe_register_enqueue_scripts() {
+
+	
+}
+add_action('wp_enqueue_scripts', 'upe_register_enqueue_scripts');
+
 
 /**********************************
 ** ADD 'EVENT' CUSTOM POST TYPE
@@ -110,6 +119,9 @@ function uep_render_event_info_metabox( $post ) {
     <br/><br/>				
     <!-- EVENT REPEAT DATA -->
   	<fieldset id="uep-event-repeat-days" style="display:none;">
+        <label for="uep-event-repeat-amount">Amount of repeat dates</label>
+        <input type="number" id="uep-event-repeat-amount" name="uep-event-repeat-amount" min="2" max="20" />
+
   		<!-- EVENT REPEAT DAYS --> 		
  		<!--<legend><?php _e( 'Repeating Days', 'uep' ); ?></legend>
         <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Monday', 'uep'); ?>" /><?php _e('Monday', 'uep'); ?>
@@ -137,19 +149,45 @@ function uep_admin_script_style( $hook ) {
     global $post_type;
  
     if ( ( 'post.php' == $hook || 'post-new.php' == $hook ) && ( 'event' == $post_type ) ) {
+
+        // STEPPER UI
+    	wp_enqueue_script(
+            'stepper',
+            SCRIPTS.'stepper/jquery.fs.stepper.min.js',
+            'jquery',
+             false,
+            false
+        );
+		wp_enqueue_style(
+            'stepper',
+            SCRIPTS.'stepper/jquery.fs.stepper.css',
+            false,
+            false,
+            'all'
+        );
+		
+        // CALENDAR UI
         wp_enqueue_script(
             'upcoming-events',
             SCRIPTS . 'script.js',
             array( 'jquery', 'jquery-ui-datepicker' ),
             '1.0',
             true
-        );
- 
+        ); 
         wp_enqueue_style(
             'jquery-ui-calendar',
             STYLES . 'jquery-ui-1.10.4.custom.min.css',
             false,
             '1.10.4',
+            'all'
+        );
+
+        // MAIN STYLES
+        wp_enqueue_style(
+            'styles',
+            STYLES . 'style.css',
+            false,
+            false,
             'all'
         );
     }

@@ -27,6 +27,8 @@
             $('#uep-event-repeat-days').hide();
         }
     });
+    // REPEAT AMOUNT
+    $( '#uep-event-repeat-amount' ).stepper();
     // REPEAT END PICKER
     $( '#uep-event-end-repeat-date' ).datepicker({
         dateFormat: 'MM dd, yy'
