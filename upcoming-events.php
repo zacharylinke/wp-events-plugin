@@ -94,18 +94,39 @@ function uep_render_event_info_metabox( $post ) {
     $event_end_date = ! empty( $event_end_date ) ? $event_end_date : $event_start_date;
 
    ?>
-
+   <!-- EVENT START DATE -->
     <label for="uep-event-start-date"><?php _e( 'Event Start Date:', 'uep' ); ?></label>
         <input class="widefat uep-event-date-input" id="uep-event-start-date" type="text" name="uep-event-start-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_start_date ); ?>" />
- 
+ 	<!-- EVENT END DATE -->
 	<label for="uep-event-end-date"><?php _e( 'Event End Date:', 'uep' ); ?></label>
         <input class="widefat uep-event-date-input" id="uep-event-end-date" type="text" name="uep-event-end-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_end_date ); ?>" />
- 
+ 	<!-- EVENT VENUE -->
 	<label for="uep-event-venue"><?php _e( 'Event Venue:', 'uep' ); ?></label>
         <input class="widefat" id="uep-event-venue" type="text" name="uep-event-venue" placeholder="eg. Times Square" value="<?php echo $event_venue; ?>" />
-   
- 
+   	<br/><br/>
+   	<!-- EVENT REPEAT? -->
+ 	<label for="uep-event-repeat"><?php _e( 'Repeating Event?', 'uep' ); ?></label>
+        <input class="widefat" id="uep-event-repeat" type="checkbox" name="uep-event-repeat" />
+    <br/><br/>				
+    <!-- EVENT REPEAT DATA -->
+  	<fieldset id="uep-event-repeat-days" style="display:none;">
+  		<!-- EVENT REPEAT DAYS --> 		
+ 		<!--<legend><?php _e( 'Repeating Days', 'uep' ); ?></legend>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Monday', 'uep'); ?>" /><?php _e('Monday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Tuesday', 'uep'); ?>" /><?php _e('Tuesday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Wednesday', 'uep'); ?>" /><?php _e('Wednesday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Thursday', 'uep'); ?>" /><?php _e('Thursday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Friday', 'uep'); ?>" /><?php _e('Friday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Saturday', 'uep'); ?>" /><?php _e('Saturday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Sunday', 'uep'); ?>" /><?php _e('Sunday', 'uep'); ?>
+        <br/><br/>-->
+        <!-- EVENT END REPEAT -->
+    	<label for="uep-event-end-repeat-date"><?php _e( 'Event End Repeat Date:', 'uep' ); ?></label>
+        	<input class="widefat uep-event-date-input" id="uep-event-end-repeat-date" type="text" name="uep-event-end-repeat-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_end_date ); ?>" />
 
+    </fieldset>
+    <br/><br/>
+  
  <br/>
  <?php }
 
