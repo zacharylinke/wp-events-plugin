@@ -1,3 +1,45 @@
+/* STEPPER UI */
 .stepper {
 	width: 100% !important;
+}
+
+/* HIDE CONDITIONAL FIELDS - DEFAULT */
+#uep-event-repeat-days, 
+#uep-event-single-repeat-container,
+#uep-event-repeat-single-container {
+    display: none;
+}
+
+#uep-event-repeat-single-container input{
+    display:block;
+}
+
+/* FRONT END */
+.uep_event_entry{
+    margin-bottom: 21px;
+}
+ 
+.uep_event_entry h4{
+    margin-bottom: 3px;
+}
+ 
+.uep_event_entry h4 a{
+    text-decoration: none;
+    color: inherit;
+}
+ 
+.uep_event_entry .event_venue{
+    font-size: 0.9em;
+    color: #777777;
+    font-weight: normal;
+    font-style: italic;
+}
+ 
+.uep_event_entry p{
+    margin-bottom: 3px !important;
+}
+ 
+.uep_event_entry .uep_event_date{
+    font-size: 0.9em;
+    color: #777777;
 }
