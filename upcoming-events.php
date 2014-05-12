@@ -95,6 +95,14 @@ function uep_render_event_info_metabox( $post ) {
     $event_start_date = get_post_meta( $post->ID, 'event-start-date', true );
     $event_end_date = get_post_meta( $post->ID, 'event-end-date', true );
     $event_venue = get_post_meta( $post->ID, 'event-venue', true );
+
+    $event_repeat = get_post_meta( $post->ID, 'event-repeat', true );
+
+    //echo $event_repeat;
+
+    $custom_fields = get_post_custom($post->ID);
+
+    //print_r($custom_fields);
  
     // if there is previously saved value then retrieve it, else set it to the current time
     $event_start_date = ! empty( $event_start_date ) ? $event_start_date : time();
@@ -115,7 +123,7 @@ function uep_render_event_info_metabox( $post ) {
    	<br/><br/>
    	<!-- EVENT REPEAT? -->
  	<label for="uep-event-repeat"><?php _e( 'Repeating Event?', 'uep' ); ?></label>
-        <input class="widefat" id="uep-event-repeat" type="checkbox" name="uep-event-repeat" />
+        <input class="widefat" id="uep-event-repeat" type="checkbox" value="repeat" name="uep-event-repeat" <?php echo $event_repeat == 'repeat' ? 'checked="checked"' : ''; ?> />
     <br/><br/>
     <!-- EVENT REPEATS ONCE? -->
     <fieldset id="uep-event-single-repeat-container">
@@ -248,6 +256,10 @@ function uep_save_event_info( $post_id ) {
  
     if ( isset( $_POST['uep-event-venue'] ) ) {
         update_post_meta( $post_id, 'event-venue', sanitize_text_field( $_POST['uep-event-venue'] ) );
+    }
+
+    if ( isset( $_POST['uep-event-repeat'] ) ) {
+        update_post_meta( $post_id, 'event-repeat', sanitize_text_field( $_POST['uep-event-repeat'] ) );
     }
 }
 add_action( 'save_post', 'uep_save_event_info' );
