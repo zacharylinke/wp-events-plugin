@@ -21,8 +21,20 @@ $(document).ready(function(){
 
     // IF REPEAT EVENT IS CHECKED, THEN SHOW REPEAT SECTIONS
     if($('#uep-event-repeat').prop('checked')){
-        $('#uep-event-repeat-type-container, #uep-event-repeat-single-container').show();
+        $('#uep-event-repeat-type-container').show();
+        // INITIAL REPEAT TYPE CHECK
+        if($('#uep-event-repeat-type-container input:checked').val() == 'auto'){
+            $('#uep-event-auto-repeat-container').show();
+            $('#uep-event-manual-repeat-container').hide();
+        // IF MANUAL REPEAT SELECTED   
+        }else{
+            $('#uep-event-auto-repeat-container').hide();
+            $('#uep-event-manual-repeat-container').show();
+        }
     }
+
+        
+    
 
     // REPEAT OPTIONS VISIBILITY, CHECK REPEAT ON CHANGE
     $( '#uep-event-repeat').change( function(e){
@@ -37,11 +49,11 @@ $(document).ready(function(){
     $( '#uep-event-repeat-type-container input' ).on("click", function(){
          // IF AUTO REPEAT SELECTED
         if($('#uep-event-repeat-type-container input:checked').val() == 'auto'){
-            $('#uep-event-repeat-days').show();
+            $('#uep-event-auto-repeat-container').show();
             $('#uep-event-manual-repeat-container').hide();
          // IF MANUAL REPEAT SELECTED   
         }else{
-            $('#uep-event-repeat-days').hide();
+            $('#uep-event-auto-repeat-container').hide();
             $('#uep-event-manual-repeat-container').show();
         }
     });

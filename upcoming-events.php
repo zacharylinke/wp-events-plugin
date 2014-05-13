@@ -98,7 +98,13 @@ function uep_render_event_info_metabox( $post ) {
 
     $event_repeat = get_post_meta( $post->ID, 'event-repeat', true );
 
+    $event_repeat_type = get_post_meta( $post->ID, 'event-repeat-type', true);
+
+    echo $event_repeat_type;
+
     $manual_repeat_dates = get_post_meta( $post->ID, 'manual-repeat-dates', true);
+
+    $end_repeat_date = get_post_meta( $post->ID, 'end-repeat-date', true);
 
  
 
@@ -145,11 +151,11 @@ function uep_render_event_info_metabox( $post ) {
     <fieldset id="uep-event-repeat-type-container">
             <!-- MANUAL REPEAT -->
             <label for="uep-event-manual-repeat-select"><?php _e( 'Manual Repeat Select', 'uep' ); ?></label>
-            <input class="widefat" id="uep-event-manual-repeat" type="radio" value="manual" name="uep-event-repeat-type" checked="checked" />
+            <input class="widefat" id="uep-event-manual-repeat" type="radio" value="manual" name="uep-event-repeat-type" <?php echo $event_repeat_type == 'manual' || $event_repeat_type == false  ? 'checked="checked"' : ''; ?> />
             <br/><br/>
             <!-- AUTO REPEAT -->
             <label for="uep-event-auto-repeat-select"><?php _e( 'Auto Repeat Select', 'uep' ); ?></label>
-            <input class="widefat" id="uep-event-auto-repeat" type="radio" value="auto" name="uep-event-repeat-type" />
+            <input class="widefat" id="uep-event-auto-repeat" type="radio" value="auto" name="uep-event-repeat-type" <?php echo $event_repeat_type == 'auto' ? 'checked="checked"' : ''; ?> />
 
     </fieldset>
     <br/><br/>
@@ -163,9 +169,17 @@ function uep_render_event_info_metabox( $post ) {
     </fieldset>
 
     <!-- EVENT REPEAT DATA -->
-  	<fieldset id="uep-event-repeat-days">
+  	<div id="uep-event-auto-repeat-container">
+
+        <!--<label for="uep-repeat-amount-type"><?php _e( 'Total Repeats', 'uep' ); ?></label>
+        <input type="radio" id="uep-repeat-amount-type" name="uep-auto-repeat-type" value="amount" />
+        <br/><br/>
+        <label for="uep-event-manual-repeat-select"><?php _e( 'Manual Repeat Select', 'uep' ); ?></label>
+        <input type="radio" id="uep-calendar-amount-type" name="uep-auto-repeat-type" value="calendar" />
+
+
         <label for="uep-event-repeat-amount">Amount of repeat dates</label>
-            <input type="number" id="uep-event-repeat-amount" name="uep-event-repeat-amount" min="2" max="20" />
+            <input type="number" id="uep-event-repeat-amount" name="uep-event-repeat-amount" min="2" max="20" />-->
 
   		<!-- EVENT REPEAT DAYS --> 		
  		<legend><?php _e( 'Repeating Days', 'uep' ); ?></legend>
@@ -179,9 +193,9 @@ function uep_render_event_info_metabox( $post ) {
         <br/><br/>
         <!-- EVENT END REPEAT -->
     	<label for="uep-event-end-repeat-date"><?php _e( 'Event End Repeat Date:', 'uep' ); ?></label>
-        	<input class="widefat uep-event-date-input" id="uep-event-end-repeat-date" type="text" name="uep-event-end-repeat-date" placeholder="Format: February 18, 2014" value="<?php echo $manual_repeat_dates ? $manual_repeat_dates : 'Please enter date'; ?>" />
+        	<input class="widefat uep-event-date-input" id="uep-event-end-repeat-date" type="text" name="uep-event-end-repeat-date" placeholder="Format: February 18, 2014" value="<?php echo $end_repeat_date ? $end_repeat_date : 'Please enter end date'; ?>" />
 
-    </fieldset>
+    </div>
     <br/><br/>
   
  <br/>
@@ -327,6 +341,12 @@ function uep_save_event_info( $post_id ) {
     // update repeat post meta 
     update_post_meta( $post_id, 'event-repeat', $repeat_check );
 
+    // REPEAT TYPE
+    $repeat_type_check = $_POST['uep-event-repeat-type'] == 'manual' ? 'manual' : 'auto';
+    
+        update_post_meta($post_id, 'event-repeat-type', $repeat_type_check);
+    
+
     // MANUAL REPEAT DATES
     if( isset( $_POST['uep-event-manual-repeat-dates'])){
         //echo $_POST['uep-event-manual-repeat-dates'];
@@ -337,11 +357,20 @@ function uep_save_event_info( $post_id ) {
 
     }
 
+
+
+
+
+    // END REPEAT DATE
+    if( isset( $_POST['uep-event-end-repeat-date'])){
+        update_post_meta($post_id, 'end-repeat-date', $_POST['uep-event-end-repeat-date']);
+    }
+
    
-    
+    //print_r( $_POST);
 
     // HOW MANY REPEAT?
-    if ( $repeat_check == 'repeat' ) {
+    /*if ( $repeat_check == 'repeat' ) {
         
             if( $_POST['uep-event-repeat-type'] == 'single' ) {
 
@@ -355,7 +384,7 @@ function uep_save_event_info( $post_id ) {
             }
             update_post_meta($post->ID, 'repeat_dates', $repeat_dates);
         
-    }
+    }*/
 }
 add_action( 'save_post', 'uep_save_event_info' );
 

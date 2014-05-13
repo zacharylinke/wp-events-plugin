@@ -10,7 +10,7 @@
 }*/
 
 /* HIDE CONDITIONAL FIELDS - DEFAULT */
-#uep-event-repeat-days, 
+#uep-event-auto-repeat-container, 
 #uep-event-repeat-type-container,
 #uep-event-repeat-single-container {
     display: none;
