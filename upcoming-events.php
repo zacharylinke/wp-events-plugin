@@ -100,7 +100,6 @@ function uep_render_event_info_metabox( $post ) {
 
     $event_repeat_type = get_post_meta( $post->ID, 'event-repeat-type', true);
 
-    echo $event_repeat_type;
 
     $manual_repeat_dates = get_post_meta( $post->ID, 'manual-repeat-dates', true);
 
@@ -356,6 +355,9 @@ function uep_save_event_info( $post_id ) {
         update_post_meta($post_id, 'manual-repeat-dates', $_POST['uep-event-manual-repeat-dates']);    
 
     }
+
+    // REPEAT DAYS CHECK
+    
 
 
 
