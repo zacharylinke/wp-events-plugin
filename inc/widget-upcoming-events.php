@@ -65,13 +65,19 @@ class Upcoming_Events extends WP_Widget {
     	$title = apply_filters( 'widget_title', $instance['title'] );
 
     	$meta_quer_args = array(
-		    'relation'  =>   'AND',
+		    'relation'  =>   'OR',
 		    array(
-		        'key'       =>   'event-end-date',
-		        'value'     =>   time(),
-		        'compare'   =>   '>='
+		        'key'       =>   'event-repeat',
+		        'value'     =>   'repeat',
+		        'compare'   =>   '='
+		    ),
+		    array(
+		    	'key'		=>   'event-end-date',
+		    	'value'		=>	 time(),
+		    	'compare'	=>   '>='
 		    )
 		);
+
  
 		$query_args = array(
 		    'post_type'             =>   'event',

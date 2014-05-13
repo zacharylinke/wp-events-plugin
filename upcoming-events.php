@@ -113,10 +113,23 @@ function uep_render_event_info_metabox( $post ) {
    ?>
     <!-- EVENT START DATE -->
     <label for="uep-event-start-date"><?php _e( 'Event Start Date:', 'uep' ); ?></label>
-        <input class="widefat uep-event-date-input" id="uep-event-start-date" type="text" name="uep-event-start-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_start_date ); ?>" />
+       <input class="widefat uep-event-date-input" id="uep-event-start-date" type="text" name="uep-event-start-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_start_date ); ?>" />
+       <!--<div id="uep-event-start-date"></div>-->
  	<!-- EVENT END DATE -->
 	<label for="uep-event-end-date"><?php _e( 'Event End Date:', 'uep' ); ?></label>
         <input class="widefat uep-event-date-input" id="uep-event-end-date" type="text" name="uep-event-end-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_end_date ); ?>" />
+
+    <!-- EVENT START TIME -->
+    <label for="uep-event-start-time"><?php _e( 'Event Start Time:', 'uep' ); ?></label>
+        <input class="widefat uep-event-date-input time ui-timepicker-input" id="uep-event-start-time" type="text" name="uep-event-start-time" />
+
+    <!-- EVENT END TIME -->
+    <label for="uep-event-end-time"><?php _e( 'Event End Time:', 'uep' ); ?></label>
+        <input class="widefat uep-event-date-input time ui-timepicker-input" id="uep-event-end-time" type="text" name="uep-event-end-time" />       
+
+
+
+
  	<!-- EVENT VENUE -->
 	<label for="uep-event-venue"><?php _e( 'Event Venue:', 'uep' ); ?></label>
         <input class="widefat" id="uep-event-venue" type="text" name="uep-event-venue" placeholder="eg. Times Square" value="<?php echo $event_venue; ?>" />
@@ -125,14 +138,15 @@ function uep_render_event_info_metabox( $post ) {
  	<label for="uep-event-repeat"><?php _e( 'Repeating Event?', 'uep' ); ?></label>
         <input class="widefat" id="uep-event-repeat" type="checkbox" value="repeat" name="uep-event-repeat" <?php echo $event_repeat == 'repeat' ? 'checked="checked"' : ''; ?> />
     <br/><br/>
-    <!-- EVENT REPEATS ONCE? -->
-    <fieldset id="uep-event-single-repeat-container">
+
+    <!-- EVENT REPEAT TYPE -->
+    <fieldset id="uep-event-repeat-type-container">
 
             <label for="uep-event-single-repeat"><?php _e( 'Single Repeat', 'uep' ); ?></label>
-            <input class="widefat" id="uep-event-single-repeat" type="radio" value="single" name="uep-event-single-repeat" checked="checked" />
+            <input class="widefat" id="uep-event-single-repeat" type="radio" value="single" name="uep-event-repeat-type" checked="checked" />
 
             <label for="uep-event-multiple-repeat"><?php _e( 'Multiple Repeat', 'uep' ); ?></label>
-            <input class="widefat" id="uep-event-multiple-repeat" type="radio" value="multiple" name="uep-event-single-repeat" />
+            <input class="widefat" id="uep-event-multiple-repeat" type="radio" value="multiple" name="uep-event-repeat-type" />
 
     </fieldset>
     <br/><br/>
@@ -178,38 +192,17 @@ function uep_render_event_info_metabox( $post ) {
 function uep_admin_script_style( $hook ) {
     global $post_type;
  
-    if ( ( 'post.php' == $hook || 'post-new.php' == $hook ) && ( 'event' == $post_type ) ) {
+    if ( ( 'post.php' == $hook || 'post-new.php' == $hook ) && ( 'event' == $post_type ) ) {    
 
-        // STEPPER UI
-    	wp_enqueue_script(
-            'stepper',
-            SCRIPTS.'stepper/jquery.fs.stepper.min.js',
-            'jquery',
-             false,
-            false
-        );
-		wp_enqueue_style(
-            'stepper',
-            SCRIPTS.'stepper/jquery.fs.stepper.css',
-            false,
-            false,
-            'all'
-        );
-		
-        // CALENDAR UI
+        wp_enqueue_script('jquery');
+
+        // MAIN SCRIPT
         wp_enqueue_script(
             'upcoming-events',
             SCRIPTS . 'script.js',
-            array( 'jquery', 'jquery-ui-datepicker' ),
+            array('jquery', 'multidate-datepick', 'bootstrap-datepicker'),
             '1.0',
-            true
-        ); 
-        wp_enqueue_style(
-            'jquery-ui-calendar',
-            STYLES . 'jquery-ui-1.10.4.custom.min.css',
-            false,
-            '1.10.4',
-            'all'
+            false
         );
 
         // MAIN STYLES
@@ -220,6 +213,75 @@ function uep_admin_script_style( $hook ) {
             false,
             'all'
         );
+
+        // MULTIPLE DATE PICKER
+        wp_enqueue_script(
+            'multidate-plugin',
+            SCRIPTS.'jquery.datepick.package-5.0.0/jquery.plugin.min.js',
+            array( 'jquery' ),
+            false,
+            false
+        );
+        wp_enqueue_script(
+            'multidate-datepick',
+            SCRIPTS.'jquery.datepick.package-5.0.0/jquery.datepick.js',
+            array('jquery', 'multidate-plugin'),
+            false,
+            false
+        );
+        wp_enqueue_style(
+            'multidate-style',
+            SCRIPTS.'jquery.datepick.package-5.0.0/jquery.datepick.css',
+            false,
+            false,
+            'all'
+        );
+
+        // TIME UI
+        wp_enqueue_script(
+            'jquery-timepicker',
+            SCRIPTS.'jquery-timepicker-master/jquery.timepicker.js',
+            array('jquery'),
+            false,
+            false
+        );
+        wp_enqueue_script(
+            'bootstrap-datepicker',
+            SCRIPTS.'jquery-timepicker-master/lib/bootstrap-datepicker.js',
+            array('jquery', 'jquery-timepicker'),
+            false,
+            false
+        );
+        wp_enqueue_style(
+            'jquery-timepicker-style',
+            SCRIPTS.'jquery-timepicker-master/jquery.timepicker.css',
+            false,
+            false,
+            'all'
+        );
+        wp_enqueue_style(
+            'bootstrap-datepicker-style',
+            SCRIPTS.'jquery-timepicker-master/lib/bootstrap-datepicker.css',
+            false,
+            false,
+            'all'
+        );
+
+        // STEPPER
+        wp_enqueue_script(
+            'stepper',
+            SCRIPTS.'stepper/jquery.fs.stepper.min.js',
+            array('jquery'),
+             false,
+            false
+        );
+        wp_enqueue_style(
+            'stepper',
+            SCRIPTS.'stepper/jquery.fs.stepper.css',
+            false,
+            false,
+            'all'
+        );      
     }
 }
 add_action( 'admin_enqueue_scripts', 'uep_admin_script_style' );
@@ -246,20 +308,40 @@ function uep_save_event_info( $post_id ) {
     }
  
     // checking for the values and performing necessary actions
+    // START DATE
     if ( isset( $_POST['uep-event-start-date'] ) ) {
         update_post_meta( $post_id, 'event-start-date', strtotime( $_POST['uep-event-start-date'] ) );
     }
- 
+    // END DATE
     if ( isset( $_POST['uep-event-end-date'] ) ) {
         update_post_meta( $post_id, 'event-end-date', strtotime( $_POST['uep-event-end-date'] ) );
     }
- 
+    // VENUE
     if ( isset( $_POST['uep-event-venue'] ) ) {
         update_post_meta( $post_id, 'event-venue', sanitize_text_field( $_POST['uep-event-venue'] ) );
     }
+    // REPEAT?
+    $repeat_check = isset( $_POST['uep-event-repeat']) ? $_POST['uep-event-repeat'] : 'no-repeat';
 
-    if ( isset( $_POST['uep-event-repeat'] ) ) {
-        update_post_meta( $post_id, 'event-repeat', sanitize_text_field( $_POST['uep-event-repeat'] ) );
+     
+        update_post_meta( $post_id, 'event-repeat', $repeat_check );
+    
+
+    // HOW MANY REPEAT?
+    if ( $repeat_check == 'repeat' ) {
+        
+            if( $_POST['uep-event-repeat-type'] == 'single' ) {
+
+                $repeat_dates = array(
+                    array(
+                        'start' => $_POST['uep-event-repeat-single-start-date'],
+                        'end' => $_POST['uep-event-repeat-single-end-date']
+                    ),
+                );
+
+            }
+            update_post_meta($post->ID, 'repeat_dates', $repeat_dates);
+        
     }
 }
 add_action( 'save_post', 'uep_save_event_info' );

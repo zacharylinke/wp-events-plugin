@@ -3,9 +3,15 @@
 	width: 100% !important;
 }
 
+
+/*#uep-event-start-date {
+    width: 100%;
+    min-height: 100px;
+}*/
+
 /* HIDE CONDITIONAL FIELDS - DEFAULT */
 #uep-event-repeat-days, 
-#uep-event-single-repeat-container,
+#uep-event-repeat-type-container,
 #uep-event-repeat-single-container {
     display: none;
 }
