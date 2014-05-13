@@ -7,51 +7,49 @@ $(document).ready(function(){
     ********************************/
     var endDate;
 
-    // START DATE
-    $( '#uep-event-start-date' ).datepick({
+    // START DATE, END DATE, REPEAT END
+    $( '#uep-event-start-date, #uep-event-end-date, #uep-event-end-repeat-date' ).datepick();
+
+    // MANUAL MULTI-SELECT REPEAT DATE
+    $( '#uep-event-manual-repeat-dates' ).datepick({
         multiSelect: 999,
         monthsToShow: 2,
     });
 
-
+    // START TIME, END TIME
     $('#uep-event-start-time, #uep-event-end-time').timepicker();
 
-
-
-
+    // IF REPEAT EVENT IS CHECKED, THEN SHOW REPEAT SECTIONS
     if($('#uep-event-repeat').prop('checked')){
         $('#uep-event-repeat-type-container, #uep-event-repeat-single-container').show();
     }
 
-    // REPEAT OPTIONS VISIBILITY
+    // REPEAT OPTIONS VISIBILITY, CHECK REPEAT ON CHANGE
     $( '#uep-event-repeat').change( function(e){
         if($('#uep-event-repeat').prop('checked')){
-            $('#uep-event-repeat-type-container, #uep-event-repeat-single-container').show();
+            $('#uep-event-repeat-type-container, #uep-event-manual-repeat-container').show();
         }else{
-            $('#uep-event-repeat-type-container, #uep-event-repeat-single-container').hide();
+            $('#uep-event-repeat-type-container, #uep-event-manual-repeat-container').hide();
         }
     });
-    // REPEAT SINGLE?
+
+    // REPEAT TYPE CHECK ( AUTO OR MANUAL )
     $( '#uep-event-repeat-type-container input' ).on("click", function(){
-        
-         if($('#uep-event-repeat-type-container input:checked').val() == 'multiple'){
+         // IF AUTO REPEAT SELECTED
+        if($('#uep-event-repeat-type-container input:checked').val() == 'auto'){
             $('#uep-event-repeat-days').show();
-            $('#uep-event-repeat-single-container').hide();
+            $('#uep-event-manual-repeat-container').hide();
+         // IF MANUAL REPEAT SELECTED   
         }else{
             $('#uep-event-repeat-days').hide();
-            $('#uep-event-repeat-single-container').show();
+            $('#uep-event-manual-repeat-container').show();
         }
     });
 
     // REPEAT AMOUNT
     $( '#uep-event-repeat-amount' ).stepper();
     // REPEAT END PICKER
-    /*$( '#uep-event-end-repeat-date' ).multiDatesPicker({
-        /*dateFormat: 'MM dd, yy'
-        onClose: function(){
-            $( '#uep-event-start-date' ).datepicker( 'option', 'maxDate', selectedDate );
-        }
-    });*/
+    
 
 });
     

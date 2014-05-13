@@ -98,7 +98,9 @@ function uep_render_event_info_metabox( $post ) {
 
     $event_repeat = get_post_meta( $post->ID, 'event-repeat', true );
 
-    //echo $event_repeat;
+    $manual_repeat_dates = get_post_meta( $post->ID, 'manual-repeat-dates', true);
+
+ 
 
     $custom_fields = get_post_custom($post->ID);
 
@@ -141,24 +143,23 @@ function uep_render_event_info_metabox( $post ) {
 
     <!-- EVENT REPEAT TYPE -->
     <fieldset id="uep-event-repeat-type-container">
-
-            <label for="uep-event-single-repeat"><?php _e( 'Single Repeat', 'uep' ); ?></label>
-            <input class="widefat" id="uep-event-single-repeat" type="radio" value="single" name="uep-event-repeat-type" checked="checked" />
-
-            <label for="uep-event-multiple-repeat"><?php _e( 'Multiple Repeat', 'uep' ); ?></label>
-            <input class="widefat" id="uep-event-multiple-repeat" type="radio" value="multiple" name="uep-event-repeat-type" />
+            <!-- MANUAL REPEAT -->
+            <label for="uep-event-manual-repeat-select"><?php _e( 'Manual Repeat Select', 'uep' ); ?></label>
+            <input class="widefat" id="uep-event-manual-repeat" type="radio" value="manual" name="uep-event-repeat-type" checked="checked" />
+            <br/><br/>
+            <!-- AUTO REPEAT -->
+            <label for="uep-event-auto-repeat-select"><?php _e( 'Auto Repeat Select', 'uep' ); ?></label>
+            <input class="widefat" id="uep-event-auto-repeat" type="radio" value="auto" name="uep-event-repeat-type" />
 
     </fieldset>
     <br/><br/>
 
-    <!-- EVENT SINGLE REPEAT -->
-    <fieldset id="uep-event-repeat-single-container">
+    <!-- EVENT MANUAL REPEAT -->
+    <fieldset id="uep-event-manual-repeat-container">
         <!-- EVENT SINGLE REPEAT START DATE -->
-        <label for="uep-event-repeat-single-start-date"><?php _e( 'Event Repeat Start Date:', 'uep' ); ?></label>
-            <input class="widefat uep-event-date-input" id="uep-event-repeat-single-start-date" type="text" name="uep-event-repeat-single-start-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_start_date ); ?>" />
-        <!-- EVENT SINGLE REPEAT END DATE -->
-        <label for="uep-event-repeat-single-end-date"><?php _e( 'Event Repeat End Date:', 'uep' ); ?></label>
-            <input class="widefat uep-event-date-input" id="uep-event-repeat-single-end-date" type="text" name="uep-event-repeat-single-end-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_end_date ); ?>" />
+        <label for="uep-event-manual-repeat-dates"><?php _e( 'Event Repeat Dates:', 'uep' ); ?></label>
+            <input class="widefat uep-event-date-input" id="uep-event-manual-repeat-dates" type="text" name="uep-event-manual-repeat-dates" placeholder="Format: February 18, 2014" value="<?php echo $manual_repeat_dates ? $manual_repeat_dates : 'Please enter date'; ?>" />
+        
     </fieldset>
 
     <!-- EVENT REPEAT DATA -->
@@ -178,7 +179,7 @@ function uep_render_event_info_metabox( $post ) {
         <br/><br/>
         <!-- EVENT END REPEAT -->
     	<label for="uep-event-end-repeat-date"><?php _e( 'Event End Repeat Date:', 'uep' ); ?></label>
-        	<input class="widefat uep-event-date-input" id="uep-event-end-repeat-date" type="text" name="uep-event-end-repeat-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_end_date ); ?>" />
+        	<input class="widefat uep-event-date-input" id="uep-event-end-repeat-date" type="text" name="uep-event-end-repeat-date" placeholder="Format: February 18, 2014" value="<?php echo $manual_repeat_dates ? $manual_repeat_dates : 'Please enter date'; ?>" />
 
     </fieldset>
     <br/><br/>
@@ -321,10 +322,22 @@ function uep_save_event_info( $post_id ) {
         update_post_meta( $post_id, 'event-venue', sanitize_text_field( $_POST['uep-event-venue'] ) );
     }
     // REPEAT?
+    // check repeat value
     $repeat_check = isset( $_POST['uep-event-repeat']) ? $_POST['uep-event-repeat'] : 'no-repeat';
+    // update repeat post meta 
+    update_post_meta( $post_id, 'event-repeat', $repeat_check );
 
-     
-        update_post_meta( $post_id, 'event-repeat', $repeat_check );
+    // MANUAL REPEAT DATES
+    if( isset( $_POST['uep-event-manual-repeat-dates'])){
+        //echo $_POST['uep-event-manual-repeat-dates'];
+       //$repeat_dates = explode(',',$_POST['uep-event-manual-repeat-dates']);
+       //foreach()
+       //  print_r($repeat_dates);
+        update_post_meta($post_id, 'manual-repeat-dates', $_POST['uep-event-manual-repeat-dates']);    
+
+    }
+
+   
     
 
     // HOW MANY REPEAT?
