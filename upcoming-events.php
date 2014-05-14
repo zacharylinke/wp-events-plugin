@@ -174,16 +174,6 @@ function uep_render_event_info_metabox( $post ) {
     <!-- EVENT REPEAT DATA -->
   	<div id="uep-event-auto-repeat-container">
 
-        <!--<label for="uep-repeat-amount-type"><?php _e( 'Total Repeats', 'uep' ); ?></label>
-        <input type="radio" id="uep-repeat-amount-type" name="uep-auto-repeat-type" value="amount" />
-        <br/><br/>
-        <label for="uep-event-manual-repeat-select"><?php _e( 'Manual Repeat Select', 'uep' ); ?></label>
-        <input type="radio" id="uep-calendar-amount-type" name="uep-auto-repeat-type" value="calendar" />
-
-
-        <label for="uep-event-repeat-amount">Amount of repeat dates</label>
-            <input type="number" id="uep-event-repeat-amount" name="uep-event-repeat-amount" min="2" max="20" />-->
-
   		<!-- EVENT REPEAT DAYS --> 		
  		<legend><?php _e( 'Repeating Days', 'uep' ); ?></legend>
         <input class="widefat" type="checkbox" name="uep-event-repeat-days[]" value="<?php _e('Monday', 'uep'); ?>" <?php foreach($event_repeat_days as $day){ echo $day == 'Monday' ? 'checked="checked"' : ''; }  ?> /><?php _e('Monday', 'uep'); ?>
@@ -345,9 +335,9 @@ function uep_save_event_info( $post_id ) {
     update_post_meta( $post_id, 'event-repeat', $repeat_check );
 
     // REPEAT TYPE
-    $repeat_type_check = $_POST['uep-event-repeat-type'] == 'manual' ? 'manual' : 'auto';
-    
-        update_post_meta($post_id, 'event-repeat-type', $repeat_type_check);
+    if( isset( $_POST['uep-event-repeat-type'] ) ) {    
+        update_post_meta($post_id, 'event-repeat-type', $_POST['uep-event-repeat-type'] );
+    }
     
 
     // MANUAL REPEAT DATES
@@ -446,7 +436,7 @@ function uep_widget_style() {
     if ( is_active_widget( '', '', 'uep_upcoming_events', true ) ) {
         wp_enqueue_style(
             'upcoming-events',
-            STYLES . 'upcoming-events.css',
+            STYLES . 'style.css',
             false,
             '1.0',
             'all'
