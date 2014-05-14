@@ -105,11 +105,15 @@ function uep_render_event_info_metabox( $post ) {
 
     $end_repeat_date = get_post_meta( $post->ID, 'end-repeat-date', true);
 
+    $event_repeat_days = get_post_meta( $post->ID, 'event-repeat-days', true);
+
  
 
     $custom_fields = get_post_custom($post->ID);
 
-    //print_r($custom_fields);
+    // print_r($custom_fields);
+
+   
  
     // if there is previously saved value then retrieve it, else set it to the current time
     $event_start_date = ! empty( $event_start_date ) ? $event_start_date : time();
@@ -182,13 +186,13 @@ function uep_render_event_info_metabox( $post ) {
 
   		<!-- EVENT REPEAT DAYS --> 		
  		<legend><?php _e( 'Repeating Days', 'uep' ); ?></legend>
-        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Monday', 'uep'); ?>" /><?php _e('Monday', 'uep'); ?>
-        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Tuesday', 'uep'); ?>" /><?php _e('Tuesday', 'uep'); ?>
-        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Wednesday', 'uep'); ?>" /><?php _e('Wednesday', 'uep'); ?>
-        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Thursday', 'uep'); ?>" /><?php _e('Thursday', 'uep'); ?>
-        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Friday', 'uep'); ?>" /><?php _e('Friday', 'uep'); ?>
-        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Saturday', 'uep'); ?>" /><?php _e('Saturday', 'uep'); ?>
-        <input class="widefat" type="checkbox" name="uep-event-repeat-days" value="<?php _e('Sunday', 'uep'); ?>" /><?php _e('Sunday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days[]" value="<?php _e('Monday', 'uep'); ?>" <?php foreach($event_repeat_days as $day){ echo $day == 'Monday' ? 'checked="checked"' : ''; }  ?> /><?php _e('Monday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days[]" value="<?php _e('Tuesday', 'uep'); ?>" <?php foreach($event_repeat_days as $day){ echo $day == 'Tuesday' ? 'checked="checked"' : ''; }  ?> /><?php _e('Tuesday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days[]" value="<?php _e('Wednesday', 'uep'); ?>" <?php foreach($event_repeat_days as $day){ echo $day == 'Wednesday' ? 'checked="checked"' : ''; }  ?> /><?php _e('Wednesday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days[]" value="<?php _e('Thursday', 'uep'); ?>" <?php foreach($event_repeat_days as $day){ echo $day == 'Thursday' ? 'checked="checked"' : ''; }  ?> /><?php _e('Thursday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days[]" value="<?php _e('Friday', 'uep'); ?>" <?php foreach($event_repeat_days as $day){ echo $day == 'Friday' ? 'checked="checked"' : ''; }  ?> /><?php _e('Friday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days[]" value="<?php _e('Saturday', 'uep'); ?>" <?php foreach($event_repeat_days as $day){ echo $day == 'Saturday' ? 'checked="checked"' : ''; }  ?> /><?php _e('Saturday', 'uep'); ?>
+        <input class="widefat" type="checkbox" name="uep-event-repeat-days[]" value="<?php _e('Sunday', 'uep'); ?>" <?php foreach($event_repeat_days as $day){ echo $day == 'Sunday' ? 'checked="checked"' : ''; }  ?> /><?php _e('Sunday', 'uep'); ?>
         <br/><br/>
         <!-- EVENT END REPEAT -->
     	<label for="uep-event-end-repeat-date"><?php _e( 'Event End Repeat Date:', 'uep' ); ?></label>
@@ -357,6 +361,18 @@ function uep_save_event_info( $post_id ) {
     }
 
     // REPEAT DAYS CHECK
+    update_post_meta($post_id, 'event-repeat-days', $_POST['uep-event-repeat-days'] );
+   /*$week_days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
+    $repeat_days = array_intersect($week_days, $_POST['uep-event-repeat-days']);
+
+    echo $repeat_days;
+    if( isset($_POST['uep-event-repeat-days'])){
+
+        echo $_POST['uep-event-repeat-days'];
+
+        
+    }*/
+
     
 
 
