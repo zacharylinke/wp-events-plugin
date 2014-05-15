@@ -94,6 +94,8 @@ function uep_render_event_info_metabox( $post ) {
     // get previously saved meta values (if any)
     $event_start_date = get_post_meta( $post->ID, 'event-start-date', true );
     $event_end_date = get_post_meta( $post->ID, 'event-end-date', true );
+    $event_start_time = get_post_meta( $post->ID, 'event-start-time', true );
+    $event_end_time = get_post_meta( $post->ID, 'event-end-time', true );
     $event_venue = get_post_meta( $post->ID, 'event-venue', true );
     $event_repeat = get_post_meta( $post->ID, 'event-repeat', true );
     $event_repeat_type = get_post_meta( $post->ID, 'event-repeat-type', true );
@@ -101,6 +103,7 @@ function uep_render_event_info_metabox( $post ) {
     $end_repeat_date = get_post_meta( $post->ID, 'end-repeat-date', true );
     $event_repeat_days = get_post_meta( $post->ID, 'event-repeat-days', true );
     $repeat_frequency = get_post_meta($post->ID, 'repeat-frequency', true );
+
 
  
 
@@ -125,11 +128,11 @@ function uep_render_event_info_metabox( $post ) {
 
     <!-- EVENT START TIME -->
     <label for="uep-event-start-time"><?php _e( 'Event Start Time:', 'uep' ); ?></label>
-        <input class="widefat uep-event-date-input time ui-timepicker-input" id="uep-event-start-time" type="text" name="uep-event-start-time" />
+        <input class="widefat uep-event-date-input time ui-timepicker-input" id="uep-event-start-time" type="text" name="uep-event-start-time" value="<?php echo $event_start_time != false ? date('g:ia', $event_start_time ) : ''; ?>" />
 
     <!-- EVENT END TIME -->
     <label for="uep-event-end-time"><?php _e( 'Event End Time:', 'uep' ); ?></label>
-        <input class="widefat uep-event-date-input time ui-timepicker-input" id="uep-event-end-time" type="text" name="uep-event-end-time" />
+        <input class="widefat uep-event-date-input time ui-timepicker-input" id="uep-event-end-time" type="text" name="uep-event-end-time" value="<?php echo $event_end_time != false ? date('g:ia', $event_end_time ) : ''; ?>" />
 
 
  	<!-- EVENT VENUE -->
@@ -323,6 +326,14 @@ function uep_save_event_info( $post_id ) {
     if ( isset( $_POST['uep-event-end-date'] ) ) {
         update_post_meta( $post_id, 'event-end-date', strtotime( $_POST['uep-event-end-date'] ) );
     }
+     // START TIME
+    if ( isset( $_POST['uep-event-start-time'] ) ) {
+        update_post_meta( $post_id, 'event-start-time', strtotime( $_POST['uep-event-start-time'] ) );
+    }
+     // END TIME
+    if ( isset( $_POST['uep-event-end-time'] ) ) {
+        update_post_meta( $post_id, 'event-end-time', strtotime( $_POST['uep-event-end-time'] ) );
+    }
     // VENUE
     if ( isset( $_POST['uep-event-venue'] ) ) {
         update_post_meta( $post_id, 'event-venue', sanitize_text_field( $_POST['uep-event-venue'] ) );
@@ -336,17 +347,11 @@ function uep_save_event_info( $post_id ) {
     // REPEAT TYPE
     if( isset( $_POST['uep-event-repeat-type'] ) ) {    
         update_post_meta($post_id, 'event-repeat-type', $_POST['uep-event-repeat-type'] );
-    }
-    
+    }    
 
     // MANUAL REPEAT DATES
     if( isset( $_POST['uep-event-manual-repeat-dates'])){
-        //echo $_POST['uep-event-manual-repeat-dates'];
-       //$repeat_dates = explode(',',$_POST['uep-event-manual-repeat-dates']);
-       //foreach()
-       //  print_r($repeat_dates);
-        update_post_meta($post_id, 'manual-repeat-dates', $_POST['uep-event-manual-repeat-dates']);    
-
+        update_post_meta($post_id, 'manual-repeat-dates', $_POST['uep-event-manual-repeat-dates']);
     }
 
     // REPEAT DAYS CHECK
