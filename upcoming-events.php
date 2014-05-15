@@ -371,7 +371,7 @@ function uep_save_event_info( $post_id ) {
 
     // END REPEAT DATE
     if( isset( $_POST['uep-event-end-repeat-date'])){
-        update_post_meta($post_id, 'end-repeat-date', $_POST['uep-event-end-repeat-date']);
+        update_post_meta($post_id, 'end-repeat-date', strtotime( $_POST['uep-event-end-repeat-date']));
     }
 
    

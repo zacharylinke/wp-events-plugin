@@ -116,9 +116,7 @@ class Upcoming_Events extends WP_Widget {
 			        $manual_repeat_dates = get_post_meta( get_the_ID(), 'manual-repeat-dates', true );
 			        $event_repeat_type = get_post_meta( get_the_ID(), 'event-repeat-type', true );
 			        $event_repeat_days = get_post_meta( get_the_ID(), 'event-repeat-days', true);
-			        $end_repeat_date = get_post_meta( get_the_ID(), 'end-repeat-date', true);
-
-			       
+			        $end_repeat_date = get_post_meta( get_the_ID(), 'end-repeat-date', true);			       
 
 			        // IF THIS POST HAS REPEAT DATES
 			        if($event_repeat == 'repeat'){
@@ -138,75 +136,38 @@ class Upcoming_Events extends WP_Widget {
 
 				        // AUTO REPEAT TYPE	
 				        }else{
-				        	// START DATE DAY
-				        	$start_date_data = getdate( $event_start_date );
-
-				        	// ARRAY TO HOLD DAY INCREMENTS
-				        	$repeat_days_wday = array();
-
-				        	// LOOP THROUGH THE ASSIGNED REPEAT DAYS
-				        	// if the assigned day is present, then add it's increment to array
-				        	foreach($event_repeat_days as $day){
-				        		switch($day){
-
-				        			case 'Monday':
-				        				$repeat_days_wday[] = 'P1D';
-				        				break;
-
-				        			case 'Tuesday':
-				        				$repeat_days_wday[] = 'P2D';
-				        				break;
-
-				        			case 'Wednesday':
-				        				$repeat_days_wday[] = 'P3D';
-				        				break;
-
-				        			case 'Thursday':
-				        				$repeat_days_wday[] = 'P4D';
-				        				break;
-
-				        			case 'Friday':
-				        				$repeat_days_wday[] = 'P5D';
-				        				break;
-
-				        			case 'Saturday':
-				        				$repeat_days_wday[] = 'P6D';
-				        				break;
-
-				        			case 'Sunday':
-				        				$repeat_days_wday[] = 'P7D';
-				        				break;						
-
-				        		}
-				        	}
 
 				        	// CREATE DATE TIME OBJECT FOR EVENT START DATE
-				        	$start_date_time = new DateTime(date('Y-m-d',$event_start_date));				        	
+				        	$start_date_time = new DateTime(date('Y-m-d',$event_start_date));
+				        	$repeat_end_date_time = new DateTime(date('Y-m-d',$end_repeat_date));				        	
+
+				        	// ASSIGN START DATE TO CURRENT DATE
+				        	$current_date = $start_date_time;				        	
+
+				        	// ARRAY TO HOLD DAY INCREMENTS
+				        	$repeat_days_wday = array();				        
+
+				        	// WHILE THE CURRENT DATE IS LESS THAN THE REPEAT END DATE
+				        	while($current_date < $repeat_end_date_time) {
+
+				        		// LOOP THROUGH THE ASSIGNED REPEAT DAYS FOR THIS EVENT				        		
+				        		foreach($event_repeat_days as $day){				        			
+
+					        		//if($current_date->format('l')!= $day){					        		
+				        				// CLONE CURRENT DATE AS ADD_DATE
+						        		$add_date = clone $current_date;
+						        		// INCREMENT DATE TO NEXT DAY VALUE
+						        		date_modify($add_date, "+1 {$day}");
+						        		// PUSH DATE AND POST ID TO EVENT ARRAY
+						        		$event_items[strtotime($add_date->format('Y-m-d'))] = get_the_ID();
+
+						        	//}						        	
+						        }
+						        // INCREMENT CURRENT DATE BY 1 WEEK
+						        $current_date->modify('+1 week');
+				        	}		        	
 				        	
-
-				        	// LOOP THROUGH REPEATING DAY INCREMENTS
-				        	foreach($repeat_days_wday as $new_day){
-				        		//echo $new_day;
-				        		// TEMP DATE TO HOLD MODIFIED DATE VALUE
-				        		$temp_date = $start_date_time;
-				        		// CREATE NEW MODIFIED DATE
-				        		$temp_date->add(new DateInterval($new_day));				        	
-				        		// ADD MODIFIED DATE TO ARRAY
-				        		$auto_repeat_dates[] = $event_items[strtotime($temp_date->format('Y-m-d'))] = get_the_ID();
-
-				        	}
-
-				        	// LOOP THROUGH THE DATES
-				        	/*foreach($auto_repeat_dates as $date){
-				        		
-				        		// PUSH DATE AS KEY, POST ID AS VALUE
-				        		$event_items[strtotime($date)] = get_the_ID();
-				        		
-				        	}*/
-				        	
-				        } // close "repeat type" check
-
-			        
+				        } // close "repeat type" check			        
 
 			        // NO REPEAT, JUST GET THE START DATE ONLY FOR THIS EVENT
 			        }else{
@@ -221,7 +182,7 @@ class Upcoming_Events extends WP_Widget {
 			        </li> -->
 			    <?php endwhile; ?>
 
-			    <?php 
+			    <?php			    	
 
 			    	// SORT THE EVENT ITEMS ASCENDING BY KEY(TIMESTAMP)
 			    	ksort($event_items);
