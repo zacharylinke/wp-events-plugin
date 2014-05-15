@@ -6,8 +6,6 @@ class Upcoming_Events extends WP_Widget {
 
 	public function __construct() {
 
-		$test = "nothing";
-
 		$widget_ops = array(
 	        'class'         =>   'uep_upcoming_events',
 	        'description'   =>   __( 'A widget to display a list of upcoming events', 'uep' )
@@ -25,7 +23,8 @@ class Upcoming_Events extends WP_Widget {
 
 		$widget_defaults = array(
 		    'title'         =>   'Upcoming Events',
-		    'number_events' =>   5
+		    'number_events' =>   5,
+		    'excerpt_link_text' => 'Read More'
 		);
  
 		$instance  = wp_parse_args( (array) $instance, $widget_defaults );
@@ -46,6 +45,11 @@ class Upcoming_Events extends WP_Widget {
 		    </select>
 		</p>
 
+		<p>
+			<label for="<?php echo $this->get_field_id( 'excerpt_link_text' ); ?>"><?php _e('Excerpt Link Text'); ?></label>
+			<input type="text" id="<?php echo $this->get_field_id( 'excerpt_link_text'); ?>" name="<?php echo $this->get_field_name( 'excerpt_link_text'); ?>" class="widefat" value="<?php echo esc_attr( $instance['excerpt_link_text'] ); ?>">
+		</p>
+
 		<?php
 
 	}
@@ -56,6 +60,7 @@ class Upcoming_Events extends WP_Widget {
 		 
 		$instance['title'] = $new_instance['title'];
 		$instance['number_events'] = $new_instance['number_events'];
+		$instance['excerpt_link_text'] = $new_instance['excerpt_link_text'];
 
 		return $instance;
 
@@ -83,7 +88,7 @@ class Upcoming_Events extends WP_Widget {
  
 		$query_args = array(
 		    'post_type'             =>   'event',
-		    'posts_per_page'        =>   $instance['number_events'],
+		    'posts_per_page'        =>   -1,
 		    'post_status'           =>   'publish',
 		    'ignore_sticky_posts'   =>   true,
 		    'meta_key'              =>   'event-start-date',
@@ -213,17 +218,21 @@ class Upcoming_Events extends WP_Widget {
 			    	$today_date->sub(new DateInterval('P1D'));
 			    	// CONVERT TO STRTOTIME
 			    	$today_date = strtotime($today_date->format('Y-m-d'));
-
+			    	// HOLD EVENT COUNT
+			    	$event_count = 0;
 
 			    	// SORT THE EVENT ITEMS ASCENDING BY KEY(TIMESTAMP)
 			    	ksort($event_items);
 			    	// PRINT MARKUP FOR EACH EVENT ITEM
 			    	foreach($event_items as $key => $value){
-			    		// IF THE EVENT IS TODAY OR LATER, THEN SHOW THE EVENT
-			    		if($key > $today_date){
+			    		// ADD ONE TO EVENT COUNT
+			    		$event_count ++;
+
+			    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
+			    		if($key > $today_date && $event_count <= $instance['number_events']){
 
 			    ?>
-			    		<li class="uep_event_entry"><h4><a class="uep_event_title" href="<?php echo get_the_permalink($value); ?>"><?php echo get_the_title($value); ?></a><p><?php echo get_excerpt_by_id($value); ?></p><time class="uep_event_date"><?php echo date('F d, Y', $key); ?></time></li>
+			    		<li class="uep_event_entry"><h4><a class="uep_event_title" href="<?php echo get_the_permalink($value); ?>"><?php echo get_the_title($value); ?></a><p><?php echo get_excerpt_by_id($value, $instance); ?></p><time class="uep_event_date"><?php echo date('F d, Y', $key); ?></time></li>
 
 			    <?php } } ?>
 			</ul>
@@ -239,7 +248,7 @@ class Upcoming_Events extends WP_Widget {
 	
 }
 
-function get_excerpt_by_id($post_id, $excerpt_length = 35){
+function get_excerpt_by_id($post_id, $instance, $excerpt_length = 35){
 	$the_post = get_post($post_id); //Gets post ID
 	//check if the cutom post excerpt has content
 	if(!empty($the_post->post_excerpt)){
@@ -250,7 +259,7 @@ function get_excerpt_by_id($post_id, $excerpt_length = 35){
 	$words = explode(' ', $the_excerpt, $excerpt_length + 1);
 	if(count($words) > $excerpt_length) :
 	array_pop($words);
-	array_push($words, '…');
+	array_push($words, '<a href="'.get_permalink($post_id).'">'.$instance['excerpt_link_text'].'</a>');
 	$the_excerpt = implode(' ', $words);
 	endif;	
 	}
