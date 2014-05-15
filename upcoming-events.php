@@ -98,20 +98,22 @@ function uep_render_event_info_metabox( $post ) {
 
     $event_repeat = get_post_meta( $post->ID, 'event-repeat', true );
 
-    $event_repeat_type = get_post_meta( $post->ID, 'event-repeat-type', true);
+    $event_repeat_type = get_post_meta( $post->ID, 'event-repeat-type', true );
 
 
-    $manual_repeat_dates = get_post_meta( $post->ID, 'manual-repeat-dates', true);
+    $manual_repeat_dates = get_post_meta( $post->ID, 'manual-repeat-dates', true );
 
-    $end_repeat_date = get_post_meta( $post->ID, 'end-repeat-date', true);
+    $end_repeat_date = get_post_meta( $post->ID, 'end-repeat-date', true );
 
-    $event_repeat_days = get_post_meta( $post->ID, 'event-repeat-days', true);
+    $event_repeat_days = get_post_meta( $post->ID, 'event-repeat-days', true );
+
+    $repeat_frequency = get_post_meta($post->ID, 'repeat-frequency', true );
 
  
 
     $custom_fields = get_post_custom($post->ID);
 
-    // print_r($custom_fields);
+    //print_r($custom_fields);
 
    
  
@@ -174,6 +176,14 @@ function uep_render_event_info_metabox( $post ) {
     <!-- EVENT REPEAT DATA -->
   	<div id="uep-event-auto-repeat-container">
 
+        <!-- FREQUENCY -->
+        <label for="uep-repeat-frequency">Repeat Frequency:</label>
+        <select id="uep-repeat-frequency" name="uep-repeat-frequency">
+            <option value="weekly" <?php echo $repeat_frequency == 'weekly' ? 'selected="selected"' : '';  ?>>Weekly</option>
+            <option value="bi-weekly" <?php echo $repeat_frequency == 'bi-weekly' ? 'selected="selected"' : '';  ?>>Bi-Weekly</option>
+            <option value="monthly" <?php echo $repeat_frequency == 'monthly' ? 'selected="selected"' : '';  ?>>Monthly</option>
+        </select>
+
   		<!-- EVENT REPEAT DAYS --> 		
  		<legend><?php _e( 'Repeating Days', 'uep' ); ?></legend>
         <input class="widefat" type="checkbox" name="uep-event-repeat-days[]" value="<?php _e('Monday', 'uep'); ?>" <?php foreach($event_repeat_days as $day){ echo $day == 'Monday' ? 'checked="checked"' : ''; }  ?> /><?php _e('Monday', 'uep'); ?>
@@ -186,7 +196,7 @@ function uep_render_event_info_metabox( $post ) {
         <br/><br/>
         <!-- EVENT END REPEAT -->
     	<label for="uep-event-end-repeat-date"><?php _e( 'Event End Repeat Date:', 'uep' ); ?></label>
-        	<input class="widefat uep-event-date-input" id="uep-event-end-repeat-date" type="text" name="uep-event-end-repeat-date" placeholder="Format: February 18, 2014" value="<?php echo $end_repeat_date ? $end_repeat_date : 'Please enter end date'; ?>" />
+        	<input class="widefat uep-event-date-input" id="uep-event-end-repeat-date" type="text" name="uep-event-end-repeat-date" placeholder="Format: February 18, 2014" value="<?php echo $end_repeat_date ? date( 'F d, Y', $end_repeat_date) : 'Please enter end date'; ?>" />
 
     </div>
     <br/><br/>
@@ -362,6 +372,11 @@ function uep_save_event_info( $post_id ) {
 
         
     }*/
+
+    // AUTO REPEAT FREQUENCY
+    if( isset($_POST['uep-repeat-frequency'])) {
+        update_post_meta($post_id, 'repeat-frequency', $_POST['uep-repeat-frequency']);
+    }
 
     
 

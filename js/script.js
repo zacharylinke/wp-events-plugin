@@ -31,6 +31,9 @@ $(document).ready(function(){
             $('#uep-event-auto-repeat-container').hide();
             $('#uep-event-manual-repeat-container').show();
         }
+    }else{
+        $('#uep-event-auto-repeat-container').hide();
+        $('#uep-event-manual-repeat-container').hide();
     }
 
         

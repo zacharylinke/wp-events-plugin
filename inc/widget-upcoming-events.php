@@ -115,8 +115,28 @@ class Upcoming_Events extends WP_Widget {
 			        $event_repeat = get_post_meta( get_the_ID(), 'event-repeat', true );
 			        $manual_repeat_dates = get_post_meta( get_the_ID(), 'manual-repeat-dates', true );
 			        $event_repeat_type = get_post_meta( get_the_ID(), 'event-repeat-type', true );
-			        $event_repeat_days = get_post_meta( get_the_ID(), 'event-repeat-days', true);
-			        $end_repeat_date = get_post_meta( get_the_ID(), 'end-repeat-date', true);			       
+			        $event_repeat_days = get_post_meta( get_the_ID(), 'event-repeat-days', true );
+			        $end_repeat_date = get_post_meta( get_the_ID(), 'end-repeat-date', true );
+			        $repeat_frequency = get_post_meta( get_the_ID(), 'repeat-frequency', true );
+			        $increment_current = '+1 week';		
+
+			        // SET FREQUENCY FILTER
+					switch($repeat_frequency){
+
+						case 'weekly':
+							$increment_current = '+1 week';
+							break;
+
+						case 'bi-weekly':
+							$increment_current = '+2 week';
+							break;
+
+						case 'monthly':
+							$increment_current = '+1 month';
+							break;
+
+
+					}
 
 			        // IF THIS POST HAS REPEAT DATES
 			        if($event_repeat == 'repeat'){
@@ -157,14 +177,18 @@ class Upcoming_Events extends WP_Widget {
 				        				// CLONE CURRENT DATE AS ADD_DATE
 						        		$add_date = clone $current_date;
 						        		// INCREMENT DATE TO NEXT DAY VALUE
-						        		date_modify($add_date, "+1 {$day}");
+						        		$add_date->modify("+1 {$day}");
 						        		// PUSH DATE AND POST ID TO EVENT ARRAY
-						        		$event_items[strtotime($add_date->format('Y-m-d'))] = get_the_ID();
+
+						        		//if(!$add_date < new DateTime()){
+
+						        			$event_items[strtotime($add_date->format('Y-m-d'))] = get_the_ID();
+
 
 						        	//}						        	
 						        }
 						        // INCREMENT CURRENT DATE BY 1 WEEK
-						        $current_date->modify('+1 week');
+						        $current_date->modify($increment_current);
 				        	}		        	
 				        	
 				        } // close "repeat type" check			        
@@ -182,17 +206,26 @@ class Upcoming_Events extends WP_Widget {
 			        </li> -->
 			    <?php endwhile; ?>
 
-			    <?php			    	
+			    <?php		
+			    	// TODAY'S DATE
+			    	$today_date = new DateTime('now');
+			    	// CONVERT TO YESTERDAY'S DATE	
+			    	$today_date->sub(new DateInterval('P1D'));
+			    	// CONVERT TO STRTOTIME
+			    	$today_date = strtotime($today_date->format('Y-m-d'));
+
 
 			    	// SORT THE EVENT ITEMS ASCENDING BY KEY(TIMESTAMP)
 			    	ksort($event_items);
 			    	// PRINT MARKUP FOR EACH EVENT ITEM
 			    	foreach($event_items as $key => $value){
+			    		// IF THE EVENT IS TODAY OR LATER, THEN SHOW THE EVENT
+			    		if($key > $today_date){
 
 			    ?>
 			    		<li class="uep_event_entry"><h4><a class="uep_event_title" href="<?php echo get_the_permalink($value); ?>"><?php echo get_the_title($value); ?></a><p><?php echo get_excerpt_by_id($value); ?></p><time class="uep_event_date"><?php echo date('F d, Y', $key); ?></time></li>
 
-			    <?php } ?>
+			    <?php } } ?>
 			</ul>
 			 
 			<a href="<?php echo get_post_type_archive_link( 'event' ); ?>">View All Events</a>
