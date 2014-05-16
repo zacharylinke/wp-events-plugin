@@ -139,8 +139,6 @@ class Upcoming_Events extends WP_Widget {
 						case 'monthly':
 							$increment_current = '+1 month';
 							break;
-
-
 					}
 
 			        // IF THIS POST HAS REPEAT DATES
@@ -176,26 +174,19 @@ class Upcoming_Events extends WP_Widget {
 				        	while($current_date < $repeat_end_date_time) {
 
 				        		// LOOP THROUGH THE ASSIGNED REPEAT DAYS FOR THIS EVENT				        		
-				        		foreach($event_repeat_days as $day){				        			
+				        		foreach($event_repeat_days as $day){
 
-					        		//if($current_date->format('l')!= $day){					        		
-				        				// CLONE CURRENT DATE AS ADD_DATE
-						        		$add_date = clone $current_date;
-						        		// INCREMENT DATE TO NEXT DAY VALUE
-						        		$add_date->modify("+1 {$day}");
-						        		// PUSH DATE AND POST ID TO EVENT ARRAY
-
-						        		//if(!$add_date < new DateTime()){
-
-						        			$event_items[strtotime($add_date->format('Y-m-d'))] = get_the_ID();
-
-
-						        	//}						        	
+			        				// CLONE CURRENT DATE AS ADD_DATE
+					        		$add_date = clone $current_date;
+					        		// INCREMENT DATE TO NEXT DAY VALUE
+					        		$add_date->modify("+1 {$day}");
+					        		// PUSH DATE AND POST ID TO EVENT ARRAY
+					        		$event_items[strtotime($add_date->format('Y-m-d'))] = get_the_ID();
+						        						        	
 						        }
 						        // INCREMENT CURRENT DATE BY 1 WEEK
 						        $current_date->modify($increment_current);
-				        	}		        	
-				        	
+				        	}			        	
 				        } // close "repeat type" check			        
 
 			        // NO REPEAT, JUST GET THE START DATE ONLY FOR THIS EVENT
@@ -204,11 +195,6 @@ class Upcoming_Events extends WP_Widget {
 			        }
 			    ?>
 
-			    <!--    <li class="uep_event_entry">
-			            <h4><a href="<?php the_permalink(); ?>" class="uep_event_title"><?php the_title(); ?></a> <span class="event_venue">at <?php echo $event_venue; ?></span></h4>
-			            <?php the_excerpt(); ?>
-			            <time class="uep_event_date"><?php echo date( 'F d, Y', $event_start_date ); ?> &ndash; <?php echo date( 'F d, Y', $event_end_date ); ?></time>
-			        </li> -->
 			    <?php endwhile; ?>
 
 			    <?php		
@@ -232,7 +218,11 @@ class Upcoming_Events extends WP_Widget {
 			    		if($key > $today_date && $event_count <= $instance['number_events']){
 
 			    ?>
-			    		<li class="uep_event_entry"><h4><a class="uep_event_title" href="<?php echo get_the_permalink($value); ?>"><?php echo get_the_title($value); ?></a><p><?php echo get_excerpt_by_id($value, $instance); ?></p><time class="uep_event_date"><?php echo date('F d, Y', $key); ?></time></li>
+			    		<li class="uep_event_entry">
+			    			<h4><a class="uep_event_title" href="<?php echo get_the_permalink($value); ?>"><?php echo get_the_title($value); ?></a></h4>
+			    			<time class="uep_event_date"><?php echo date('F d, Y', $key); ?></time>
+			    			<p><?php echo get_excerpt_by_id($value, $instance); ?></p>
+			    		</li>
 
 			    <?php } } ?>
 			</ul>
@@ -259,7 +249,7 @@ function get_excerpt_by_id($post_id, $instance, $excerpt_length = 35){
 	$words = explode(' ', $the_excerpt, $excerpt_length + 1);
 	if(count($words) > $excerpt_length) :
 	array_pop($words);
-	array_push($words, '<a href="'.get_permalink($post_id).'">'.$instance['excerpt_link_text'].'</a>');
+	array_push($words, '<a class="uep_excerpt_link" href="'.get_permalink($post_id).'">'.$instance['excerpt_link_text'].'</a>');
 	$the_excerpt = implode(' ', $words);
 	endif;	
 	}

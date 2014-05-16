@@ -22,7 +22,13 @@
 
 /* FRONT END */
 .uep_event_entry{
+    list-style-type: none;
     margin-bottom: 21px;
+}
+
+.uep_excerpt_link {
+    color: CornflowerBlue !important;
+    display: block;
 }
  
 .uep_event_entry h4{
@@ -46,6 +52,7 @@
 }
  
 .uep_event_entry .uep_event_date{
+    display: block;
     font-size: 0.9em;
     color: #777777;
 }
