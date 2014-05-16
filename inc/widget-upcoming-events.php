@@ -24,7 +24,8 @@ class Upcoming_Events extends WP_Widget {
 		$widget_defaults = array(
 		    'title'         =>   'Upcoming Events',
 		    'number_events' =>   5,
-		    'excerpt_link_text' => 'Read More'
+		    'excerpt_link_text' => 'Read More',
+		    'excerpt_word_length' => 25
 		);
  
 		$instance  = wp_parse_args( (array) $instance, $widget_defaults );
@@ -38,16 +39,22 @@ class Upcoming_Events extends WP_Widget {
 
 		<p>
 		    <label for="<?php echo $this->get_field_id( 'number_events' ); ?>"><?php _e( 'Number of events to show', 'uep' ); ?></label>
-		    <select id="<?php echo $this->get_field_id( 'number_events' ); ?>" name="<?php echo $this->get_field_name( 'number_events' ); ?>" class="widefat">
+		    <!-- <select id="<?php echo $this->get_field_id( 'number_events' ); ?>" name="<?php echo $this->get_field_name( 'number_events' ); ?>" class="widefat">
 		        <?php for ( $i = 1; $i <= 10; $i++ ): ?>
 		            <option value="<?php echo $i; ?>" <?php selected( $i, $instance['number_events'], true ); ?>><?php echo $i; ?></option>
 		        <?php endfor; ?>
-		    </select>
+		    </select> -->
+		    <input type="number" min="1" max="20" step="1" id="<?php echo $this->get_field_id( 'number_events' ); ?>" name="<?php echo $this->get_field_name( 'number_events' ); ?>" class="widefat number-events_widget_admin" value="5" />
 		</p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'excerpt_link_text' ); ?>"><?php _e('Excerpt Link Text'); ?></label>
 			<input type="text" id="<?php echo $this->get_field_id( 'excerpt_link_text'); ?>" name="<?php echo $this->get_field_name( 'excerpt_link_text'); ?>" class="widefat" value="<?php echo esc_attr( $instance['excerpt_link_text'] ); ?>">
+		</p>
+
+		<p>
+			<label for="<?php echo $this->get_field_id( 'excerpt_word_length' ); ?>"><?php _e('Excerpt Word Length'); ?></label>
+			<input type="number" min="10" max="100" step="1" id="<?php echo $this->get_field_id( 'excerpt_word_length'); ?>" name="<?php echo $this->get_field_name( 'excerpt_word_length'); ?>" class="widefat excerpt-length_widget_admin" value="<?php echo esc_attr( $instance['excerpt_word_length'] ); ?>">
 		</p>
 
 		<?php
@@ -61,6 +68,7 @@ class Upcoming_Events extends WP_Widget {
 		$instance['title'] = $new_instance['title'];
 		$instance['number_events'] = $new_instance['number_events'];
 		$instance['excerpt_link_text'] = $new_instance['excerpt_link_text'];
+		$instance['excerpt_word_length'] = $new_instance['excerpt_word_length'];
 
 		return $instance;
 
@@ -210,12 +218,13 @@ class Upcoming_Events extends WP_Widget {
 			    	// SORT THE EVENT ITEMS ASCENDING BY KEY(TIMESTAMP)
 			    	ksort($event_items);
 			    	// PRINT MARKUP FOR EACH EVENT ITEM
-			    	foreach($event_items as $key => $value){
-			    		// ADD ONE TO EVENT COUNT
-			    		$event_count ++;
+			    	foreach($event_items as $key => $value){			    		
 
 			    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
-			    		if($key > $today_date && $event_count <= $instance['number_events']){
+			    		if($key > $today_date && $event_count < $instance['number_events']){
+
+			    			// ADD ONE TO EVENT COUNT
+			    			$event_count ++;
 
 			    ?>
 			    		<li class="uep_event_entry">
@@ -238,7 +247,7 @@ class Upcoming_Events extends WP_Widget {
 	
 }
 
-function get_excerpt_by_id($post_id, $instance, $excerpt_length = 35){
+function get_excerpt_by_id($post_id, $instance){
 	$the_post = get_post($post_id); //Gets post ID
 	//check if the cutom post excerpt has content
 	if(!empty($the_post->post_excerpt)){
@@ -246,8 +255,8 @@ function get_excerpt_by_id($post_id, $instance, $excerpt_length = 35){
 	}else{
 	$the_excerpt = $the_post->post_content; //Gets post_content to be used as a basis for the excerpt
 	$the_excerpt = strip_tags(strip_shortcodes($the_excerpt)); //Strips tags and images
-	$words = explode(' ', $the_excerpt, $excerpt_length + 1);
-	if(count($words) > $excerpt_length) :
+	$words = explode(' ', $the_excerpt, $instance['excerpt_word_length'] + 1);
+	if(count($words) > $instance['excerpt_word_length']) :
 	array_pop($words);
 	array_push($words, '<a class="uep_excerpt_link" href="'.get_permalink($post_id).'">'.$instance['excerpt_link_text'].'</a>');
 	$the_excerpt = implode(' ', $words);

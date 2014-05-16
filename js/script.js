@@ -61,11 +61,6 @@ $(document).ready(function(){
         }
     });
 
-    // REPEAT AMOUNT
-    $( '#uep-event-repeat-amount' ).stepper();
-    // REPEAT END PICKER
-    
-
 });
     
 })( jQuery );

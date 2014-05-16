@@ -277,6 +277,11 @@ function uep_admin_script_style( $hook ) {
             'all'
         );
 
+              
+    }
+
+    if('widgets.php' == $hook ){
+
         // STEPPER
         wp_enqueue_script(
             'stepper',
@@ -291,7 +296,17 @@ function uep_admin_script_style( $hook ) {
             false,
             false,
             'all'
-        );      
+        );
+
+         // STEPPER SCRIPT
+        wp_enqueue_script(
+            'widget-admin',
+            SCRIPTS . 'widget_admin.js',
+            array('jquery','stepper'),
+            '1.0',
+            false
+        );
+
     }
 }
 add_action( 'admin_enqueue_scripts', 'uep_admin_script_style' );
