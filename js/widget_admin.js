@@ -2,10 +2,10 @@
 
 $(document).ready(function(){
 
-	   // REPEAT AMOUNT
+	// EXCERPT LENGTH
     $( '.excerpt-length_widget_admin' ).stepper();
-    // REPEAT END PICKER
-
+   
+    // NUMBER OF EVENTS
     $('.number-events_widget_admin').stepper();
     
 
