@@ -43,8 +43,13 @@ $(document).ready(function(){
     $( '#uep-event-repeat').change( function(e){
         if($('#uep-event-repeat').prop('checked')){
             $('#uep-event-repeat-type-container, #uep-event-manual-repeat-container').show();
+            if($('#uep-event-repeat-type-container input:checked').val() == 'auto'){
+                $('#uep-event-auto-repeat-container').show();
+                $('#uep-event-manual-repeat-container').hide();
+            }
+
         }else{
-            $('#uep-event-repeat-type-container, #uep-event-manual-repeat-container').hide();
+            $('#uep-event-repeat-type-container, #uep-event-manual-repeat-container, #uep-event-auto-repeat-container').hide();
         }
     });
 
