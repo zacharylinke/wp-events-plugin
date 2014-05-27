@@ -442,17 +442,19 @@ function uep_widget_style() {
 }
 add_action( 'wp_enqueue_scripts', 'uep_widget_style' );
 
-include( 'inc/widget-upcoming-events.php' );
 
-//include( 'inc/calendar-view.php' );
-
-include ('inc/EventPosts.class.php');
 
 function uep_activation_callback() {
     uep_custom_post_type();
     flush_rewrite_rules();
 }
 register_activation_hook( __FILE__, 'uep_activation_callback' );
+
+include( 'inc/widget-upcoming-events.php' );
+
+//include( 'inc/calendar-view.php' );
+
+include ('inc/EventPosts.class.php');
 
 
 
