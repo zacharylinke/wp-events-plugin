@@ -1,18 +1,40 @@
 <?php
 
-//error_reporting('E_ALL');
+/**
+ * This EventPosts class is responsible for getting 
+ */
 
 class EventPosts {
 
+	public $event_posts;
+
+	protected $query_args;
+
+	protected $meta_query_args;
+
+	protected $upcoming_events;
+
+	protected $return_events;
+
+
+
 	public function __construct() {
 
-		$this->event_post = array();
+		$this->event_posts = array();
+
+		$this->query_args = array();
+
+		$this->meta_query_args = array();
+
+		$this->upcoming_events = array();
+
+		$this->return_events = array();
 
 	}
 
-	public function get_display_posts() {
+	public function get_display_posts() {	
 
-		$meta_quer_args = array(
+		$this->meta_query_args = array(
 		    'relation'  =>   'OR',
 		    array(
 		        'key'       =>   'event-repeat',
@@ -26,8 +48,8 @@ class EventPosts {
 		    )
 		);
 
- 
-		$query_args = array(
+ 		
+		$this->query_args = array(
 		    'post_type'             =>   'event',
 		    'posts_per_page'        =>   -1,
 		    'post_status'           =>   'publish',
@@ -35,12 +57,14 @@ class EventPosts {
 		    'meta_key'              =>   'event-start-date',
 		    'orderby'               =>   'meta_value_num',
 		    'order'                 =>   'ASC',
-		    'meta_query'            =>   $meta_quer_args
+		    'meta_query'            =>   $this->meta_query_args
 		);
-		 
-		$upcoming_events = new WP_Query( $query_args );
+		
+		$this->upcoming_events = new WP_Query( $this->query_args );
 
-		 <?php while( $upcoming_events->have_posts() ): $upcoming_events->the_post();
+
+
+		while( $this->upcoming_events->have_posts() ): $this->upcoming_events->the_post();
 			    	
 			    	// GET ALL POST META
 			        $event_start_date = get_post_meta( get_the_ID(), 'event-start-date', true );
@@ -122,11 +146,10 @@ class EventPosts {
 			        }else{
 			        	$event_items[$event_start_date] = get_the_ID();
 			        }
-			    ?>
+			     endwhile;
 
-			    <?php endwhile; ?>
 
-			    <?php		
+			    		
 			    	// TODAY'S DATE
 			    	$today_date = new DateTime('now');
 			    	// CONVERT TO YESTERDAY'S DATE	
@@ -139,23 +162,22 @@ class EventPosts {
 			    	// SORT THE EVENT ITEMS ASCENDING BY KEY(TIMESTAMP)
 			    	ksort($event_items);
 			    	// PRINT MARKUP FOR EACH EVENT ITEM
+
 			    	foreach($event_items as $key => $value){			    		
 
 			    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
-			    		if($key > $today_date && $event_count < $instance['number_events']){
+			    		if($key > $today_date && $event_count < 5){
 
 			    			// ADD ONE TO EVENT COUNT
 			    			$event_count ++;
 
-			    ?>
-			    		<li class="uep_event_entry">
-			    			<h4><a class="uep_event_title" href="<?php echo get_the_permalink($value); ?>"><?php echo get_the_title($value); ?></a></h4>
-			    			<time class="uep_event_date"><?php echo date('F d, Y', $key); ?></time>
-			    			<p><?php echo get_excerpt_by_id($value, $instance); ?></p>
-			    		</li>
+			    			$return_events[$key] = $value;
 
-			    <?php } } ?>
+			   			}
+			   		}
 
+			   		return $return_events;
+		
 	}
 
 }
