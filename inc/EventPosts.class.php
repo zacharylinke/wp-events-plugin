@@ -6,7 +6,7 @@
 
 class EventPosts {
 
-	public $event_posts;
+	protected $event_posts;
 
 	protected $query_args;
 
@@ -18,7 +18,9 @@ class EventPosts {
 
 
 
-	public function __construct() {
+	public function __construct($num_events = 5) {
+
+		$this->num_events = $num_events;
 
 		$this->event_posts = array();
 
@@ -166,7 +168,7 @@ class EventPosts {
 			    	foreach($event_items as $key => $value){			    		
 
 			    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
-			    		if($key > $today_date && $event_count < 5){
+			    		if($key > $today_date && $event_count < $this->num_events){
 
 			    			// ADD ONE TO EVENT COUNT
 			    			$event_count ++;
@@ -175,6 +177,8 @@ class EventPosts {
 
 			   			}
 			   		}
+
+			   		//return $this->num_events;
 
 			   		return $return_events;
 		
