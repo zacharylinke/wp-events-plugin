@@ -1,9 +1,8 @@
 <?php
-
 /**
- * This EventPosts class is responsible for getting 
+ * 
+ * @package default
  */
-
 class EventPosts {
 
 	protected $event_posts;
@@ -18,9 +17,7 @@ class EventPosts {
 
 
 
-	public function __construct($num_events = 5) {
-
-		$this->num_events = $num_events;
+	public function __construct() {
 
 		$this->event_posts = array();
 
@@ -34,7 +31,12 @@ class EventPosts {
 
 	}
 
-	public function get_display_posts() {	
+	/**
+	 * Description
+	 * @param int $num_events 
+	 * @return array $return_events
+	 */
+	public function get_display_posts($num_events) {	
 
 		$this->meta_query_args = array(
 		    'relation'  =>   'OR',
@@ -165,18 +167,37 @@ class EventPosts {
 			    	ksort($event_items);
 			    	// PRINT MARKUP FOR EACH EVENT ITEM
 
-			    	foreach($event_items as $key => $value){			    		
+			    	if(empty($num_events)) {
 
-			    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
-			    		if($key > $today_date && $event_count < $this->num_events){
+				    	foreach($event_items as $key => $value){			    		
 
-			    			// ADD ONE TO EVENT COUNT
-			    			$event_count ++;
+				    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
+				    		if($key > $today_date){
 
-			    			$return_events[$key] = $value;
+				    			// ADD ONE TO EVENT COUNT
+				    			$event_count ++;
 
-			   			}
-			   		}
+				    			$return_events[$key] = $value;
+
+				   			}
+				   		}
+				   	}else{
+
+				   		foreach($event_items as $key => $value){			    		
+
+				    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
+				    		if($key > $today_date && $event_count < $num_events){
+
+				    			// ADD ONE TO EVENT COUNT
+				    			$event_count ++;
+
+				    			$return_events[$key] = $value;
+
+				   			}
+				   		}
+
+
+				   	}
 
 			   		//return $this->num_events;
 

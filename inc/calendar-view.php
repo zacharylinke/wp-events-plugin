@@ -1,6 +1,12 @@
 <?php
 
-
+/**
+ * Description
+ * @param type $month 
+ * @param type $year 
+ * @param type $dateArray 
+ * @return type
+ */
 function build_calendar($month,$year,$dateArray) {
 
     include('inc/EventPosts.class.php');
@@ -22,6 +28,10 @@ function build_calendar($month,$year,$dateArray) {
      // Retrieve some information about the first day of the
      // month in question.
      $dateComponents = getdate($firstDayOfMonth);
+
+     //$next_month = $dateComponents['mon'] + 1;
+
+     //$prev_month = $dateComponents['mon'] - 1;
 
      // What is the name of the month in question?
      $monthName = $dateComponents['month'];
@@ -84,7 +94,7 @@ function build_calendar($month,$year,$dateArray) {
 
           foreach ($events->get_display_posts() as $key => $value) {
             if(date('Y-m-d', $key) == $date){
-              $calendar .= get_the_title($value);
+              $calendar .= '<div>'.get_the_title($value).'</div>';
             }
           }
 
@@ -116,6 +126,10 @@ function build_calendar($month,$year,$dateArray) {
 
 }
 
+/**
+ * Description
+ * @return type
+ */
 function trigger_build_calendar(){
 
     if(isset($_GET['nav'])){

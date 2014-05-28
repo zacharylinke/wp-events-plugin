@@ -92,7 +92,7 @@ class Upcoming_Events extends WP_Widget {
 			    echo $before_title . $title . $after_title;
 			}
 
-			$get_events = new EventPosts(10);
+			$get_events = new EventPosts();
 
 		?>
 
@@ -101,7 +101,7 @@ class Upcoming_Events extends WP_Widget {
 		
 		<?php
 
-			foreach ($get_events->get_display_posts() as $key => $value) {
+			foreach ($get_events->get_display_posts(5) as $key => $value) {
 				
 			?>
 			 
