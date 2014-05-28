@@ -30,9 +30,14 @@ function build_calendar($month,$year,$dateArray) {
      // month in question.
      $dayOfWeek = $dateComponents['wday'];
 
+    // print_r($dateComponents);
+
+     // Calendar navigation
+     $calendar = '<div><a href="'.$_SERVER['PATH_INFO'].'?nav=prev&month='.$dateComponents['mon'].'&year='.$dateComponents['year'].'">prev<a/><a href="'.$_SERVER['PATH_INFO'].'?nav=next&month='.$dateComponents['mon'].'&year='.$dateComponents['year'].'">next<a/></div>';
+
      // Create the table tag opener and day headers
 
-     $calendar = "<table class='calendar'>";
+     $calendar .= "<table class='calendar'>";
      $calendar .= "<caption>$monthName $year</caption>";
      $calendar .= "<tr>";
 
@@ -113,12 +118,53 @@ function build_calendar($month,$year,$dateArray) {
 
 function trigger_build_calendar(){
 
+    if(isset($_GET['nav'])){
+
+      // next month
+      if($_GET['nav'] == 'next'){
+
+       
+
+          $calendarDate = mktime(0,0,0,$_GET['month'],1,$_GET['year']);
+
+          $calendarDate = date('Y-m-d',$calendarDate);
+
+          $calendarDate = new DateTime($calendarDate);
+
+          $calendarDate->modify('next month');
+
+          $dateComponents = getdate(strtotime($calendarDate->format('Y-m-d')));
+
+
+        
+
+      // prev month
+      }elseif($_GET['nav'] == 'prev'){
+
+         $calendarDate = mktime(0,0,0,$_GET['month'],1,$_GET['year']);
+
+          $calendarDate = date('Y-m-d',$calendarDate);
+
+          $calendarDate = new DateTime($calendarDate);
+
+          $calendarDate->modify('last month');
+
+          $dateComponents = getdate(strtotime($calendarDate->format('Y-m-d')));
+
+      }
+
+    }else{
+
      $dateComponents = getdate();
+
+    }
 
      $month = $dateComponents['mon'];                  
      $year = $dateComponents['year'];
 
-     //print_r($dateComponents);
+    // print_r($dateComponents);
+
+
 
      echo build_calendar($month,$year,$dateArray);
 
