@@ -101,8 +101,6 @@ class Upcoming_Events extends WP_Widget {
 		
 		<?php
 
-		print_r($instance);	
-
 			foreach ($get_events->get_display_posts() as $key => $value) {
 				
 			?>

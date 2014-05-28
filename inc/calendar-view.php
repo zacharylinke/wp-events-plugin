@@ -1,6 +1,14 @@
 <?php
 
+
 function build_calendar($month,$year,$dateArray) {
+
+    include('inc/EventPosts.class.php');
+
+
+
+    $events = new EventPosts();
+
 
      // Create array containing abbreviations of days of week.
      $daysOfWeek = array('S','M','T','W','T','F','S');
@@ -67,7 +75,15 @@ function build_calendar($month,$year,$dateArray) {
           
           $date = "$year-$month-$currentDayRel";
 
-          $calendar .= "<td class='day' rel='$date'>$currentDay</td>";
+          $calendar .= "<td class='day' rel='$date'>$currentDay";
+
+          foreach ($events->get_display_posts() as $key => $value) {
+            if(date('Y-m-d', $key) == $date){
+              $calendar .= get_the_title($value);
+            }
+          }
+
+          $calendar .= "</td>";
 
           // Increment counters
  

@@ -9,6 +9,10 @@
     min-height: 100px;
 }*/
 
+table.calendar {
+    width: 100%;
+}
+
 /* HIDE CONDITIONAL FIELDS - DEFAULT */
 #uep-event-auto-repeat-container, 
 #uep-event-repeat-type-container,
