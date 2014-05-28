@@ -102,6 +102,8 @@ function trigger_build_calendar(){
      $month = $dateComponents['mon'];                  
      $year = $dateComponents['year'];
 
+     //print_r($dateComponents);
+
      echo build_calendar($month,$year,$dateArray);
 
 

@@ -452,7 +452,7 @@ register_activation_hook( __FILE__, 'uep_activation_callback' );
 
 include( 'inc/widget-upcoming-events.php' );
 
-//include( 'inc/calendar-view.php' );
+include( 'inc/calendar-view.php' );
 
 include ('inc/EventPosts.class.php');
 
