@@ -36,7 +36,7 @@ class EventPosts {
 	 * @param int $num_events 
 	 * @return array $return_events
 	 */
-	public function get_display_posts($num_events) {	
+	public function get_display_posts($num_events, $widget = false) {	
 
 		$this->meta_query_args = array(
 		    'relation'  =>   'OR',
@@ -167,23 +167,9 @@ class EventPosts {
 			    	ksort($event_items);
 			    	// PRINT MARKUP FOR EACH EVENT ITEM
 
-			    	if(empty($num_events)) {
+			    	if($widget == true) {
 
-				    	foreach($event_items as $key => $value){			    		
-
-				    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
-				    		if($key > $today_date){
-
-				    			// ADD ONE TO EVENT COUNT
-				    			$event_count ++;
-
-				    			$return_events[$key] = $value;
-
-				   			}
-				   		}
-				   	}else{
-
-				   		foreach($event_items as $key => $value){			    		
+				    	foreach($event_items as $key => $value){				    	
 
 				    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
 				    		if($key > $today_date && $event_count < $num_events){
@@ -193,7 +179,21 @@ class EventPosts {
 
 				    			$return_events[$key] = $value;
 
-				   			}
+				   			}					   		
+				   		}
+				   	}else{
+
+				   		foreach($event_items as $key => $value){			    		
+
+				    		// IF THE EVENT IS TODAY OR LATER && EVENT COUNT IS LESS THAN EVENT COUNT SETTING, THEN SHOW THE EVENT
+				    		//if($key > $today_date){
+
+				    			// ADD ONE TO EVENT COUNT
+				    			$event_count ++;
+
+				    			$return_events[$key] = $value;
+
+				   			//}
 				   		}
 
 

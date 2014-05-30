@@ -1,5 +1,8 @@
 <?php
 
+//error_reporting(E_ALL);
+
+
 /**
  * Description
  * @param type $month 
@@ -7,11 +10,9 @@
  * @param type $dateArray 
  * @return type
  */
-function build_calendar($month,$year,$dateArray) {
+function build_calendar($month,$year) {
 
     include('inc/EventPosts.class.php');
-
-
 
     $events = new EventPosts();
 
@@ -29,9 +30,40 @@ function build_calendar($month,$year,$dateArray) {
      // month in question.
      $dateComponents = getdate($firstDayOfMonth);
 
-     //$next_month = $dateComponents['mon'] + 1;
+    if(isset($_GET['month'])){
+      $calc_month = $_GET['month'];
+    }else{
+      $calc_month = $dateComponents['mon'];
+    }  
 
-     //$prev_month = $dateComponents['mon'] - 1;
+
+      if($calc_month == '12' || $calc_month == '1'){
+
+        if($_GET['month'] == '12'){          
+          $next_month = '1';
+          $prev_month = $dateComponents['mon'] - 1;
+          $next_year = $dateComponents['year'] +1;
+          $prev_year = $dateComponents['year'] -1;
+          
+      
+        }elseif($_GET['month'] == '1'){
+          $next_month = $dateComponents['mon'] + 1;
+          $prev_month = '12';          
+          $next_year = $dateComponents['year'];
+          $prev_year = $dateComponents['year'] -1;
+
+        }
+       
+      }else{
+        $next_month = $dateComponents['mon'] + 1;
+        $prev_month = $dateComponents['mon'] - 1;
+        $next_year = $dateComponents['year'];
+        $prev_year = $dateComponents['year'];
+
+      }
+
+
+     
 
      // What is the name of the month in question?
      $monthName = $dateComponents['month'];
@@ -43,7 +75,7 @@ function build_calendar($month,$year,$dateArray) {
     // print_r($dateComponents);
 
      // Calendar navigation
-     $calendar = '<div><a href="'.$_SERVER['PATH_INFO'].'?nav=prev&month='.$dateComponents['mon'].'&year='.$dateComponents['year'].'">prev<a/><a href="'.$_SERVER['PATH_INFO'].'?nav=next&month='.$dateComponents['mon'].'&year='.$dateComponents['year'].'">next<a/></div>';
+     $calendar = '<div><a href="'.$_SERVER['PATH_INFO'].'?nav=prev&month='.$prev_month.'&cal_year='.$prev_year.'">prev<a/><a href="'.$_SERVER['PATH_INFO'].'?nav=next&month='.$next_month.'&cal_year='.$next_year.'">next<a/></div>';
 
      // Create the table tag opener and day headers
 
@@ -105,12 +137,9 @@ function build_calendar($month,$year,$dateArray) {
           $currentDay++;
           $dayOfWeek++;
 
-     }
-     
-     
+     }     
 
      // Complete the row of the last week in month, if necessary
-
      if ($dayOfWeek != 7) { 
      
           $remainingDays = 7 - $dayOfWeek;
@@ -130,22 +159,18 @@ function build_calendar($month,$year,$dateArray) {
  * Description
  * @return type
  */
-function trigger_build_calendar(){
+function trigger_build_calendar(){  
 
-    if(isset($_GET['nav'])){
+   if(isset($_GET['nav'])){
 
       // next month
-      if($_GET['nav'] == 'next'){
+      if($_GET['nav'] == 'next'){       
 
-       
-
-          $calendarDate = mktime(0,0,0,$_GET['month'],1,$_GET['year']);
+          $calendarDate = mktime(0,0,0,$_GET['month'],1,$_GET['cal_year']);          
 
           $calendarDate = date('Y-m-d',$calendarDate);
 
           $calendarDate = new DateTime($calendarDate);
-
-          $calendarDate->modify('next month');
 
           $dateComponents = getdate(strtotime($calendarDate->format('Y-m-d')));
 
@@ -155,44 +180,33 @@ function trigger_build_calendar(){
       // prev month
       }elseif($_GET['nav'] == 'prev'){
 
-         $calendarDate = mktime(0,0,0,$_GET['month'],1,$_GET['year']);
+        $calendarDate = mktime(0,0,0,$_GET['month'],1,$_GET['cal_year']);
 
-          $calendarDate = date('Y-m-d',$calendarDate);
+        $calendarDate = date('Y-m-d',$calendarDate);
 
-          $calendarDate = new DateTime($calendarDate);
+        $calendarDate = new DateTime($calendarDate);
 
-          $calendarDate->modify('last month');
-
-          $dateComponents = getdate(strtotime($calendarDate->format('Y-m-d')));
+        $dateComponents = getdate(strtotime($calendarDate->format('Y-m-d'))); 
 
       }
 
     }else{
 
-     $dateComponents = getdate();
+     $dateComponents = getdate();     
 
     }
 
      $month = $dateComponents['mon'];                  
      $year = $dateComponents['year'];
 
-    // print_r($dateComponents);
-
-
-
-     echo build_calendar($month,$year,$dateArray);
-
-
-
+     echo build_calendar($month,$year);
 }
 
 function check_page(){
-
-
-
-     //print_r($WP:);
+     
      if(is_page('events')){
-           // TIME UI
+     
+        // TIME UI
         wp_enqueue_script(
             'jquery-timepicker',
             SCRIPTS.'jquery-timepicker-master/jquery.timepicker.js',
@@ -200,9 +214,8 @@ function check_page(){
             false,
             false
         );
-
-
-          add_filter ('the_content', 'trigger_build_calendar');
+          
+        add_filter ('the_content', 'trigger_build_calendar');
      }
 }
 
@@ -210,4 +223,3 @@ add_action('the_post','check_page');
 
 
 
-?>

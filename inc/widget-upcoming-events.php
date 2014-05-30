@@ -1,11 +1,21 @@
 <?php
 
-//error_reporting('E_ALL');
-
 include('inc/EventPosts.class.php');
 
+/**
+ * 
+ * @package Upcoming Events
+ */
 class Upcoming_Events extends WP_Widget {
 
+
+	/**
+	 * Initiate Events widget extending WordPress WP_Widget parent class.
+	 * 
+	 * @param array $widget_ops Set class and description for events widget.
+	 *  
+	 *
+	 */
 	public function __construct() {
 
 		$widget_ops = array(
@@ -21,6 +31,13 @@ class Upcoming_Events extends WP_Widget {
 
 	}
 
+	/**
+	 * Builds event widget form inputs for admin.
+	 * 
+	 * @param array $instance Settings of widget instance set in dashboard.
+	 * @param array $widget_defaults Default widget settings
+	 * 
+	 */
 	public function form( $instance ) {
 
 		$widget_defaults = array(
@@ -41,11 +58,6 @@ class Upcoming_Events extends WP_Widget {
 
 		<p>
 		    <label for="<?php echo $this->get_field_id( 'number_events' ); ?>"><?php _e( 'Number of events to show', 'uep' ); ?></label>
-		    <!-- <select id="<?php echo $this->get_field_id( 'number_events' ); ?>" name="<?php echo $this->get_field_name( 'number_events' ); ?>" class="widefat">
-		        <?php for ( $i = 1; $i <= 10; $i++ ): ?>
-		            <option value="<?php echo $i; ?>" <?php selected( $i, $instance['number_events'], true ); ?>><?php echo $i; ?></option>
-		        <?php endfor; ?>
-		    </select> -->
 		    <input type="number" min="1" max="20" step="1" id="<?php echo $this->get_field_id( 'number_events' ); ?>" name="<?php echo $this->get_field_name( 'number_events' ); ?>" class="widefat number-events_widget_admin" value="5" />
 		</p>
 
@@ -63,6 +75,13 @@ class Upcoming_Events extends WP_Widget {
 
 	}
 
+	/**
+	 * Updates UEP widget instance settings.
+	 * 
+	 * @param array $new_instance New settings for widget instance.
+	 * @param array $old_instance Old settings for widget instance.
+	 * @return array $instance Updated settings for widget instance.
+	 */
 	public function update( $new_instance, $old_instance ) {
 
 		$instance = $old_instance;
@@ -76,15 +95,17 @@ class Upcoming_Events extends WP_Widget {
 
 	}
 
+	/**
+	 * Description
+	 * @param array $args 
+	 * @param array $instance 
+	 * @return type
+	 */
+
 	public function widget( $args, $instance ) {
 
 		extract( $args );
     	$title = apply_filters( 'widget_title', $instance['title'] );
-
-    	
-		 
-		$upcoming_events = new WP_Query( $query_args );
-
 	
 
 		echo $before_widget;
@@ -92,6 +113,7 @@ class Upcoming_Events extends WP_Widget {
 			    echo $before_title . $title . $after_title;
 			}
 
+			// Get new Event Posts object
 			$get_events = new EventPosts();
 
 		?>
@@ -100,33 +122,38 @@ class Upcoming_Events extends WP_Widget {
 		</ul>
 		
 		<?php
-
-			foreach ($get_events->get_display_posts(5) as $key => $value) {
-				
-			?>
-			 
-			
+			// Loop through the event posts method
+			foreach ($get_events->get_display_posts($instance['number_events'], true) as $key => $value) {				
+		?>		
 			   
-			    		<li class="uep_event_entry">
-			    			<h4><a class="uep_event_title" href="<?php echo get_the_permalink($value); ?>"><?php echo get_the_title($value); ?></a></h4>
-			    			<time class="uep_event_date"><?php echo date('F d, Y', $key); ?></time>
-			    			<p><?php echo get_excerpt_by_id($value, $instance); ?></p>
-			    		</li>
+	    		<li class="uep_event_entry">
+	    			<h4><a class="uep_event_title" href="<?php echo get_the_permalink($value); ?>"><?php echo get_the_title($value); ?></a></h4>
+	    			<time class="uep_event_date"><?php echo date('F d, Y', $key); ?></time>
+	    			<p><?php echo get_excerpt_by_id($value, $instance); ?></p>
+	    		</li>
 
-			    <?php } ?>
-			</ul>
-			 
-			<a href="<?php echo get_post_type_archive_link( 'event' ); ?>">View All Events</a>
-			 
-			<?php
-			wp_reset_query();
-			 
-			echo $after_widget;
+		<?php } ?>
+
+		</ul>
+		 
+		<a href="<?php echo get_post_type_archive_link( 'event' ); ?>">View All Events</a>
+		 
+		<?php
+		wp_reset_query();
+		 
+		echo $after_widget;
 
 	}
 	
 }
 
+/**
+ * Gets a post excerpt based on the passed id. Also accepts widget instance settings.
+ * 
+ * @param int $post_id The post ID to retrieve the excerpt from.
+ * @param array $instance Widget instance settings; 'excerpt_word_length' and 'excerpt_link_text'
+ * @return string $the_excerpt Returns the post excerpt and a link to the post.
+ */
 function get_excerpt_by_id($post_id, $instance){
 	$the_post = get_post($post_id); //Gets post ID
 	//check if the cutom post excerpt has content

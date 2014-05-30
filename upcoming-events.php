@@ -25,9 +25,11 @@ function upe_register_enqueue_scripts() {
 add_action('wp_enqueue_scripts', 'upe_register_enqueue_scripts');
 
 
-/**********************************
-** ADD 'EVENT' CUSTOM POST TYPE
-**********************************/
+/**
+ * Create 'Events' custom post type.
+ * @param array $labels
+ * 
+ */
 function uep_custom_post_type() {
 	// 'EVENT' POST TYPE DATA
 	// Labels for events
